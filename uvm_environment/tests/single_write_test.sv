@@ -1,0 +1,61 @@
+`ifndef SINGLE_WRITE_TEST_SV
+`define SINGLE_WRITE_TEST_SV
+
+class single_write_test extends base_test;
+
+    // Factory Registration
+    `uvm_component_utils(single_write_test)
+
+    function void build_phase(uvm_phase phase);
+
+    super.build_phase(phase);
+
+    cfg.cov_mode = SINGLE_WRITE;
+
+    `uvm_info(get_type_name(),
+              "Coverage Mode = SINGLE_WRITE",
+              UVM_LOW)
+
+    endfunction
+
+    // Sequence Handle
+    single_write_seq seq;
+
+    // Constructor
+    function new(string name = "single_write_test",
+                 uvm_component parent = null);
+
+        super.new(name,parent);
+
+    endfunction
+
+    // Run Phase
+    task run_phase(uvm_phase phase);
+
+    phase.raise_objection(this);
+
+    `uvm_info(get_type_name(),
+              "Starting Single Write Test",
+              UVM_LOW)
+
+    // Create Sequence
+    seq = single_write_seq::type_id::create("seq");
+
+    // Start Sequence
+    seq.start(env.ahb_agnt.seqr);
+
+    #300ns;
+
+    `uvm_info(get_type_name(),
+              "Single Write Test Completed",
+              UVM_LOW)
+
+    phase.drop_objection(this);
+
+endtask
+
+endclass
+
+`endif
+
+
